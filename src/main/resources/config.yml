@@ -1,0 +1,20 @@
+include:
+  # Whether to include player armor in the weight calculation.
+  armor: true
+  # Whether to include player equipment in the weight calculation.
+  equipment: true
+  
+# Whether to include all players when calculating weight.
+# If set to false, this will only calculate weight of the first player.
+calculate-all-players: true
+
+# Minimum weight that will trigger dripleaf to change tilt.
+weight-to-trigger-dripleaf: 150.0
+# Weights of items.
+# Format:
+# <material>: <weight>
+weights:
+  LEATHER_HELMET: 37.5
+  LEATHER_CHESTPLATE: 37.5
+  LEATHER_LEGGINGS: 37.5
+  LEATHER_BOOTS: 37.5
