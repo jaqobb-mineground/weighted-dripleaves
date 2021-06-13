@@ -5,7 +5,7 @@ plugins {
 }
 
 group = "dev.jaqobb"
-version = "1.0.0"
+version = "1.0.0-SNAPSHOT"
 description = "Turn dripleaves into weighted ones"
 
 java {
@@ -23,11 +23,11 @@ bukkit {
     website = "https://jaqobb.dev"
 }
 
-tasks {
-    shadowJar {
-        relocate("org.bstats.bukkit", "dev.jaqobb.weighted_dripleaves.metrics")
-    }
-}
+//tasks {
+//    shadowJar {
+//        relocate("org.bstats.bukkit", "dev.jaqobb.weighted_dripleaves.metrics")
+//    }
+//}
 
 repositories {
     mavenCentral()
@@ -41,14 +41,14 @@ repositories {
             includeGroup("net.md-5")
         }
     }
-    maven("https://repo.codemc.org/repository/maven-public/") {
-        content {
-            includeGroup("org.bstats")
-        }
-    }
+//    maven("https://repo.codemc.org/repository/maven-public/") {
+//        content {
+//            includeGroup("org.bstats")
+//        }
+//    }
 }
 
 dependencies {
     compileOnly("org.spigotmc:spigot-api:1.17-R0.1-SNAPSHOT")
-    implementation("org.bstats:bstats-bukkit:1.7")
+//    implementation("org.bstats:bstats-bukkit:1.7")
 }
