@@ -1,5 +1,6 @@
 package dev.jaqobb.weighted_dripleaves;
 
+import dev.jaqobb.weighted_dripleaves.updater.Updater;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -7,8 +8,10 @@ import org.bukkit.block.Block;
 import org.bukkit.block.data.type.BigDripleaf;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPhysicsEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 import java.util.ArrayList;
@@ -25,6 +28,7 @@ public class WeightedDripleavesPlugin extends JavaPlugin implements Listener {
     private double weightToTriggerDripleaf;
     private WeightCalculationMode weightCalculationMode;
     private Map<Material, Double> weights;
+    private Updater updater;
     
     @Override
     public void onLoad() {
@@ -48,8 +52,19 @@ public class WeightedDripleavesPlugin extends JavaPlugin implements Listener {
     
     @Override
     public void onEnable() {
+        this.getLogger().log(Level.INFO, "Starting updater...");
+        this.updater = new Updater(this, 93257);
         this.getLogger().log(Level.INFO, "Registering listener...");
         this.getServer().getPluginManager().registerEvents(this, this);
+    }
+    
+    @EventHandler(priority = EventPriority.MONITOR)
+    public void onPlayerJoin(PlayerJoinEvent event) {
+        Player player = event.getPlayer();
+        if (!player.hasPermission("weighteddripleaves.updater.notify")) {
+            return;
+        }
+        player.sendMessage(this.updater.getUpdateMessage());
     }
     
     @EventHandler
