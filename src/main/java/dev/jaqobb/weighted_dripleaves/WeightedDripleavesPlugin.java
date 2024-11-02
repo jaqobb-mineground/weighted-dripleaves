@@ -54,6 +54,7 @@ public class WeightedDripleavesPlugin extends JavaPlugin implements Listener {
     public void onEnable() {
         this.getLogger().log(Level.INFO, "Starting updater...");
         this.updater = new Updater(this, 93257);
+        this.getServer().getScheduler().runTaskTimerAsynchronously(this, this.updater, 0L, 20L * 60L * 60L);
         this.getLogger().log(Level.INFO, "Registering listener...");
         this.getServer().getPluginManager().registerEvents(this, this);
     }
