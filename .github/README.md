@@ -6,8 +6,8 @@ Click [here](https://www.spigotmc.org/resources/weighted-dripleaves.93257/) to g
 
 ## Features
 
-* Weighted dripleaves - since 1.0.0
-* Weight calculation modes - since 1.1.0
+* Weighted dripleaves - since 1.0.0.
+* Weight calculation modes - since 1.1.0.
 
 ## Usage
 
