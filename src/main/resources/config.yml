@@ -3,7 +3,7 @@ include:
   armor: true
   # Whether to include player equipment in the weight calculation.
   equipment: true
-  
+
 # Whether to include all players when calculating weight.
 # If set to false, this will only calculate weight of the first player.
 calculate-all-players: true
