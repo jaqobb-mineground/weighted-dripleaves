@@ -4,12 +4,14 @@ include:
   # Whether to include player equipment in the weight calculation.
   equipment: true
 
-# Whether to include all players when calculating weight.
-# If set to false, this will only calculate weight of the first player.
-calculate-all-players: true
-
 # Minimum weight that will trigger dripleaf to change tilt.
 weight-to-trigger-dripleaf: 150.0
+# Weight calculation mode.
+# FIRST_PLAYER: The dripleaf will only consider the weight of the first player. This usually means the player that joined the server first. Legacy mode, for those who actually used this prior to 1.0.1.
+# LIGHTEST_PLAYER: The dripleaf will only consider the weight of the lightest player.
+# HEAVIEST_PLAYER: The dripleaf will only consider the weight of the heaviest player.
+# ALL_PLAYERS: The dripleaf will consider the weight of all players.
+weight-calculation-mode: HEAVIEST_PLAYER
 # Weights of items.
 # Format:
 # <material>: <weight>

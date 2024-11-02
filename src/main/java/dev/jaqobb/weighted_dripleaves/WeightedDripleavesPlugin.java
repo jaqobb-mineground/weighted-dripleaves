@@ -22,8 +22,8 @@ public class WeightedDripleavesPlugin extends JavaPlugin implements Listener {
     
     private boolean includeArmor;
     private boolean includeEquipment;
-    private boolean calculateAllPlayers;
     private double weightToTriggerDripleaf;
+    private WeightCalculationMode weightCalculationMode;
     private Map<Material, Double> weights;
     
     @Override
@@ -32,8 +32,8 @@ public class WeightedDripleavesPlugin extends JavaPlugin implements Listener {
         this.saveDefaultConfig();
         this.includeArmor = this.getConfig().getBoolean("include.armor");
         this.includeEquipment = this.getConfig().getBoolean("include.equipment");
-        this.calculateAllPlayers = this.getConfig().getBoolean("calculate-all-players");
         this.weightToTriggerDripleaf = this.getConfig().getDouble("weight-to-trigger-dripleaf");
+        this.weightCalculationMode = WeightCalculationMode.valueOf(this.getConfig().getString("weight-calculation-mode", "HEAVIEST_PLAYER"));
         this.weights = new EnumMap<>(Material.class);
         for (String weightMaterial : this.getConfig().getConfigurationSection("weights").getKeys(false)) {
             this.weights.put(Material.getMaterial(weightMaterial), this.getConfig().getConfigurationSection("weights").getDouble(weightMaterial));
@@ -41,8 +41,8 @@ public class WeightedDripleavesPlugin extends JavaPlugin implements Listener {
         this.getServer().getLogger().log(Level.INFO, "Loaded configuration:");
         this.getLogger().log(Level.INFO, "* Include armor: " + (this.includeArmor ? "yes" : "no") + ".");
         this.getLogger().log(Level.INFO, "* Include equipment: " + (this.includeEquipment ? "yes" : "no") + ".");
-        this.getLogger().log(Level.INFO, "* Calculate all players: " + (this.calculateAllPlayers ? "yes" : "no") + ".");
         this.getLogger().log(Level.INFO, "* Weight to trigger dripleaf: " + this.weightToTriggerDripleaf + ".");
+        this.getLogger().log(Level.INFO, "* Weight calculation mode: " + this.weightCalculationMode.name() + ".");
         this.getLogger().log(Level.INFO, "* Weights: " + this.weights.size() + ".");
     }
     
@@ -68,17 +68,40 @@ public class WeightedDripleavesPlugin extends JavaPlugin implements Listener {
             return;
         }
         double weight = 0.0D;
-        for (Player player : players) {
-            weight += this.calculatePlayerWeight(player);
-            if (this.calculateAllPlayers) {
-                continue;
+        switch (this.weightCalculationMode) {
+            case FIRST_PLAYER: {
+                for (Player player : players) {
+                    weight = this.calculatePlayerWeight(player);
+                    break;
+                }
+                break;
             }
-            break;
+            case LIGHTEST_PLAYER: {
+                weight = players.stream()
+                    .mapToDouble(this::calculatePlayerWeight)
+                    .min()
+                    .orElse(0.0D);
+                break;
+            }
+            case HEAVIEST_PLAYER: {
+                weight = players.stream()
+                    .mapToDouble(this::calculatePlayerWeight)
+                    .max()
+                    .orElse(0.0D);
+                break;
+            }
+            case ALL_PLAYERS: {
+                weight = players.stream()
+                    .mapToDouble(this::calculatePlayerWeight)
+                    .sum();
+                break;
+            }
         }
-        if (Double.compare(weight, this.weightToTriggerDripleaf) < 0) {
-            blockData.setTilt(BigDripleaf.Tilt.NONE);
-            block.setBlockData(blockData);
+        if (Double.compare(weight, this.weightToTriggerDripleaf) >= 0) {
+            return;
         }
+        blockData.setTilt(BigDripleaf.Tilt.NONE);
+        block.setBlockData(blockData);
     }
     
     private Collection<Player> getPlayersOnBlock(Block block) {
@@ -147,5 +170,13 @@ public class WeightedDripleavesPlugin extends JavaPlugin implements Listener {
             return locationBlock;
         }
         return null;
+    }
+    
+    public enum WeightCalculationMode {
+        
+        FIRST_PLAYER,
+        LIGHTEST_PLAYER,
+        HEAVIEST_PLAYER,
+        ALL_PLAYERS
     }
 }
