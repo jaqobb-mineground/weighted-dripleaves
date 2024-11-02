@@ -5,7 +5,7 @@ plugins {
 }
 
 group = "dev.jaqobb"
-version = "1.1.0-SNAPSHOT"
+version = "1.1.0"
 description = "Turn dripleaves into weighted ones"
 
 java {
